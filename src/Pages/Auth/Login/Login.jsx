@@ -5,12 +5,29 @@ import newDAHD from "../../../images/newDAHD_logo.svg";
 import nddb_logo from "../../../images/nddb_logo.svg";
 import bharat_pashudhan from "../../../images/bharat_pashudhan.svg";
 import SubmitButton from "../../../Components/Button/SubmitButton";
+import api from "../../../Utils/CommonApi";
 
 const Login = () => {
-  const [userId, setUserId] = useState("");
+  const [userName, setUserName] = useState("");
+  const [isUserValid, setIsUserValid] = useState(false);
   const [password, setPassword] = useState("");
-  const onLogin = (event) => {
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const userIdEnterHandler = (event) => {
+    setUserName(event.target.value);
+  };
+  const passwordEnterHandler = (event) => {
+    setPassword(event.target.value);
+  };
+  const onLogin = async (event) => {
     event.preventDefault();
+    try {
+      const url = "admin/livestock/login";
+      const obj = { userName: userName, password: password };
+      const response = await api.post(url, obj);
+      console.log(response);
+    } catch (ex) {
+      console.log(ex);
+    }
   };
   return (
     <>
@@ -61,14 +78,16 @@ const Login = () => {
               </div>
               <form onSubmit={onLogin}>
                 <div className="form-group">
-                  <label htmlFor="userId" className="label-color">
+                  <label htmlFor="userName" className="label-color">
                     User ID
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="userId"
+                    id="userName"
+                    onChange={userIdEnterHandler}
                     placeholder="Enter User ID"
+                    value={userName}
                     name="username"
                   />
                 </div>
@@ -82,6 +101,8 @@ const Login = () => {
                     id="Password"
                     placeholder="Enter Password"
                     name="password"
+                    onChange={passwordEnterHandler}
+                    value={password}
                     required
                   />
                 </div>
@@ -94,7 +115,9 @@ const Login = () => {
                     Forgot Password
                   </Link>
                 </div>
-                <SubmitButton className="login-signup-button">Login</SubmitButton>
+                <SubmitButton className="login-signup-button">
+                  Login
+                </SubmitButton>
               </form>
             </div>
           </div>
