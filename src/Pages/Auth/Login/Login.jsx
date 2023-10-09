@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Login.scss";
-import newDAHD from "src/assets/newDAHD_logo.svg";
-import nddb_logo from "src/assets/nddb_logo.svg";
-import bharat_pashudhan from "src/assets/images/bharat_pashudhan.svg";
+import newDAHD from "../../../images/newDAHD_logo.svg";
+import nddb_logo from "../../../images/nddb_logo.svg";
+import bharat_pashudhan from "../../../images/bharat_pashudhan.svg";
+import SubmitButton from "../../../Components/Button/SubmitButton";
 
 const Login = () => {
-  const onLogin = () => {};
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
+  const onLogin = (event) => {
+    event.preventDefault();
+  };
   return (
     <>
       <section className="login-section">
@@ -54,7 +59,7 @@ const Login = () => {
                   Enter your credentials to access your account
                 </p>
               </div>
-              <form onSubmit={onLogin()}>
+              <form onSubmit={onLogin}>
                 <div className="form-group">
                   <label htmlFor="userId" className="label-color">
                     User ID
@@ -89,12 +94,7 @@ const Login = () => {
                     Forgot Password
                   </Link>
                 </div>
-                <button
-                  className="login-signup-button btn btn-dark mb-2"
-                  type="submit"
-                >
-                  Login
-                </button>
+                <SubmitButton className="login-signup-button">Login</SubmitButton>
               </form>
             </div>
           </div>
