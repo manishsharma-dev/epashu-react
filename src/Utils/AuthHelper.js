@@ -1,12 +1,13 @@
 import { redirect } from "react-router-dom";
 
 export function setToken(token) {
-  const encodedToken = atob(token);
+  const encodedToken = btoa(token);
   setSessionData("_t", encodedToken);
 }
 
 export function getToken() {
-  const token = getSessionData("_t");
+  const _t = getSessionData("_t")
+  const token = _t ? atob(_t) : null;
   return token;
 }
 
@@ -25,4 +26,13 @@ export function checkAdminAuthLoader() {
     return redirect("/login");
   }
   return null;
+}
+
+export function saveAuthData(token, expirationDate, userData, refresh_token) {
+  setToken(token);
+  if (expirationDate) {
+    sessionStorage.setItem('expiration', expirationDate.toISOString());
+  }
+  sessionStorage.setItem('user', JSON.stringify(userData));
+  sessionStorage.setItem('refreshToken', refresh_token);
 }

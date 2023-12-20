@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 import "./Login.scss";
 import newDAHD from "../../../images/newDAHD_logo.svg";
 import nddb_logo from "../../../images/nddb_logo.svg";
 import bharat_pashudhan from "../../../images/bharat_pashudhan.svg";
 import SubmitButton from "../../../Components/Button/SubmitButton";
 import api from "../../../Utils/CommonApi";
+import { encryptText } from "../../../Utils/CommonHelper";
+import { saveAuthData } from "../../../Utils/AuthHelper";
+import axios from "axios";
 
 const Login = () => {
   const [userName, setUserName] = useState("");
@@ -14,6 +17,7 @@ const Login = () => {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const userIdEnterHandler = (event) => {
     setUserName(event.target.value);
+    setIsUserValid(true);
   };
   const passwordEnterHandler = (event) => {
     setPassword(event.target.value);
@@ -22,9 +26,18 @@ const Login = () => {
     event.preventDefault();
     try {
       const url = "admin/livestock/login";
-      const obj = { userName: userName, password: password };
+      const obj = { userName: userName, password: encryptText(password) };
       const response = await api.post(url, obj);
-      console.log(response);
+      if (response.status === 200) {
+        var myHeaders = { "authorization": `Bearer ${response.data.access_token}` }
+        const authResponse = await axios({
+          url: `${process.env.REACT_APP_URI}admin/user/userAutherization`,
+          method: 'GET',
+          headers: myHeaders,
+        })
+        saveAuthData(response?.data?.access_token, null, authResponse?.data?.data, response?.data?.refresh_token);
+        return redirect("/");
+      }
     } catch (ex) {
       console.log(ex);
     }

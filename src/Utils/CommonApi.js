@@ -2,11 +2,11 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_URI, // Replace with your API base URL
-  timeout: 5000, // Adjust as needed
+  timeout: 50000, // Adjust as needed
 });
 
 // Common headers or configurations can be set here
-// axiosInstance.defaults.headers.common['Authorization'] = 'Bearer YOUR_TOKEN';
+axiosInstance.defaults.headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
 
 const api = {
   get: (url, config = {}) => axiosInstance.get(url, config),
